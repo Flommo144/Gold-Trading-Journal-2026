@@ -5,30 +5,16 @@
 <title>Trading journal</title>
 <style>
   :root {
-    --bg: #f7f6f2;
-    --card: #ffffff;
-    --border: #e2ded4;
-    --text: #2c2a26;
-    --text-secondary: #6b6860;
-    --text-muted: #9c988e;
-    --win: #1f6e56;
-    --win-bg: #e1f5ee;
-    --loss: #a32d2d;
-    --loss-bg: #fcebeb;
-    --warn: #854f0b;
-    --warn-bg: #faeeda;
-    --accent: #185fa5;
-    --radius: 8px;
+    --bg: #f7f6f2; --card: #ffffff; --border: #e2ded4;
+    --text: #2c2a26; --text-secondary: #6b6860; --text-muted: #9c988e;
+    --win: #1f6e56; --win-bg: #e1f5ee;
+    --loss: #a32d2d; --loss-bg: #fcebeb;
+    --warn: #854f0b; --warn-bg: #faeeda;
+    --accent: #185fa5; --radius: 8px;
   }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 2rem 1rem 4rem;
-  }
-  .wrap { max-width: 760px; margin: 0 auto; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); padding:2rem 1rem 4rem; }
+  .wrap { max-width: 780px; margin: 0 auto; }
   h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
   .sub { font-size: 13px; color: var(--text-secondary); margin: 0 0 1.5rem; }
   .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1rem; }
@@ -41,19 +27,17 @@
     border-radius: var(--radius); background: #fff; color: var(--text); width: 100%;
   }
   input[type=range] { width: 100%; }
-  button {
-    font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: var(--radius);
-    border: 1px solid var(--border); background: #fff; color: var(--text); cursor: pointer;
-  }
+  button { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: #fff; color: var(--text); cursor: pointer; }
   button:hover { background: #f2f0ea; }
   button.primary { background: var(--text); color: #fff; border-color: var(--text); }
   button.primary:hover { background: #1a1815; }
-  .risk-box { border: 1px solid #ecd9ae; background: var(--warn-bg); border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1.5rem; }
+  .risk-box { border: 1px solid #ecd9ae; background: var(--warn-bg); border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1rem; }
   .risk-box p.title { font-size: 13px; color: var(--warn); margin: 0 0 8px; font-weight: 600; }
   .risk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px,1fr)); gap: 8px; }
   .risk-grid div { text-align: center; }
   .risk-grid .n { font-size: 11px; color: var(--warn); }
   .risk-grid .pct { font-size: 15px; font-weight: 600; color: var(--warn); }
+  .limit-banner { display:none; border:1px solid #f0997b; background: var(--loss-bg); color: var(--loss); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 13px; font-weight: 600; }
   .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 12px; margin-bottom: 1.5rem; }
   .metrics .card p.label { font-size: 12px; color: var(--text-secondary); margin: 0 0 4px; }
   .metrics .card p.value { font-size: 22px; font-weight: 600; margin: 0; }
@@ -66,16 +50,74 @@
   .win-text { color: var(--win); }
   .loss-text { color: var(--loss); }
   .empty { font-size: 13px; color: var(--text-muted); padding: 1rem 0; }
-  .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
   .section-head p { font-size: 14px; font-weight: 600; margin: 0; }
   .status { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 16px; }
   .del { color: var(--loss); background: none; border: none; cursor: pointer; font-size: 12px; padding: 0; }
+  .tag-pill { display:inline-block; font-size:11px; padding:2px 8px; border-radius:20px; background:var(--bg); border:1px solid var(--border); color:var(--text-secondary); }
+  canvas { width: 100%; height: 160px; display:block; }
+  .section-gap { margin-bottom: 1.5rem; }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    padding: 2.75rem 2rem 2.25rem;
+    margin-bottom: 1.75rem;
+    background: linear-gradient(120deg, #2b1f0f 0%, #6b4e14 22%, #d9a92c 45%, #f4d878 52%, #d9a92c 59%, #6b4e14 78%, #2b1f0f 100%);
+    background-size: 220% 220%;
+    animation: heroShift 14s ease-in-out infinite;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 60%; height: 220%;
+    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(12deg);
+    animation: heroSheen 6s ease-in-out infinite;
+  }
+  @keyframes heroShift {
+    0% { background-position: 0% 40%; }
+    50% { background-position: 100% 60%; }
+    100% { background-position: 0% 40%; }
+  }
+  @keyframes heroSheen {
+    0% { left: -60%; }
+    55% { left: 130%; }
+    100% { left: 130%; }
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero-eyebrow {
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(43,31,15,0.75); font-weight: 600; margin: 0 0 6px;
+  }
+  .hero-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(32px, 6vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: #2b1f0f;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(43,31,15,0.8);
+    margin: 8px 0 0;
+    font-weight: 500;
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Trading journal</h1>
-  <p class="sub">Tracks balance, drawdown, and risk exposure. Saves automatically across sessions.</p>
+  <div class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">XAU / USD &middot; trading desk</p>
+      <h1 class="hero-title">Andrea XAU</h1>
+      <p class="hero-sub">Trading journal &mdash; balance, drawdown, and risk, tracked trade by trade.</p>
+    </div>
+  </div>
 
   <div class="row">
     <div class="card settings-card">
@@ -90,7 +132,16 @@
       </div>
       <p style="font-size:13px; color:var(--warn); font-weight:600; margin:6px 0 0;" id="riskDollar">$15.00 at risk</p>
     </div>
+    <div class="card settings-card">
+      <p class="label">Daily loss limit</p>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <input type="range" id="dailyLimit" min="5" max="100" value="50" step="5">
+        <span id="dailyLimitOut" style="font-size:20px; font-weight:600; min-width:44px;">50%</span>
+      </div>
+    </div>
   </div>
+
+  <div id="limitBanner" class="limit-banner">Daily loss limit reached for today &mdash; consider stopping rather than logging another trade.</div>
 
   <div class="risk-box">
     <p class="title">Risk snapshot at this size</p>
@@ -104,27 +155,49 @@
     <div class="card"><p class="label">Losing streak</p><p class="value" id="mStreak">0</p></div>
   </div>
 
-  <div class="card" style="margin-bottom: 1.5rem;">
+  <div class="card section-gap">
+    <div class="section-head"><p>Equity curve</p></div>
+    <canvas id="equityChart" width="700" height="160"></canvas>
+  </div>
+
+  <div class="card section-gap">
     <p style="font-size:14px; font-weight:600; margin:0 0 12px;">Log a trade</p>
     <div class="form-grid">
       <div><label>Date</label><input type="date" id="tDate"></div>
+      <div><label>Instrument</label><input type="text" id="tInstrument" value="Gold" placeholder="e.g. Gold, EUR/USD"></div>
       <div><label>Direction</label><select id="tDir"><option>Long</option><option>Short</option></select></div>
       <div><label>Outcome</label><select id="tOutcome"><option>Win</option><option>Loss</option></select></div>
       <div><label>Reward:risk</label><input type="number" id="tRR" value="1.5" step="0.1" min="0.1"></div>
+      <div><label>Setup tag</label><input type="text" id="tTag" placeholder="e.g. breakout, pullback, news"></div>
     </div>
     <p style="font-size:13px; margin:0 0 10px;">If this wins: <span id="rrWin" class="win-text" style="font-weight:600;">+$22.50</span> &nbsp;&middot;&nbsp; if this loses: <span id="rrLoss" class="loss-text" style="font-weight:600;">-$15.00</span></p>
     <div style="margin-bottom:10px;">
       <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Setup notes</label>
       <input type="text" id="tNotes" placeholder="What was the setup and reasoning?">
     </div>
+    <div style="margin-bottom:10px;">
+      <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">How did you feel going in?</label>
+      <input type="text" id="tPsych" placeholder="e.g. confident, anxious, tired, chasing a loss">
+    </div>
     <button class="primary" id="addTrade">+ Add trade</button>
     <span class="status" id="saveStatus"></span>
+  </div>
+
+  <div class="card section-gap">
+    <div class="section-head"><p>Setup performance</p></div>
+    <table id="tagTable"><thead><tr><th>Tag</th><th style="text-align:right;">Trades</th><th style="text-align:right;">Win rate</th></tr></thead><tbody id="tagBody"></tbody></table>
+    <p class="empty" id="tagEmpty">Tag a few trades to see which setups actually work for you.</p>
   </div>
 
   <div class="card">
     <div class="section-head">
       <p>Ledger</p>
-      <div style="display:flex; gap:8px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <select id="instrumentFilter" style="width:auto;"><option value="all">All instruments</option></select>
+        <label style="font-size:12px; color:var(--text-secondary); display:flex; align-items:center; gap:4px;">
+          <input type="file" id="importCsv" accept=".csv" style="display:none;">
+          <button id="importBtn" type="button">Import CSV</button>
+        </label>
         <button id="exportCsv">Export CSV</button>
         <button id="resetAll">Reset</button>
       </div>
@@ -133,10 +206,10 @@
       <table>
         <thead>
           <tr>
-            <th>Date</th><th>Dir</th><th>Outcome</th>
+            <th>Date</th><th>Instrument</th><th>Dir</th><th>Outcome</th><th>Tag</th>
             <th style="text-align:right;">P&amp;L</th>
             <th style="text-align:right;">Balance</th>
-            <th>Notes</th><th></th>
+            <th>Notes</th><th>Feeling</th><th></th>
           </tr>
         </thead>
         <tbody id="ledgerBody"></tbody>
@@ -154,13 +227,16 @@
   var riskPct = document.getElementById('riskPct');
   var riskOut = document.getElementById('riskOut');
   var riskGrid = document.getElementById('riskGrid');
+  var dailyLimit = document.getElementById('dailyLimit');
+  var dailyLimitOut = document.getElementById('dailyLimitOut');
   var dateInput = document.getElementById('tDate');
   var saveStatus = document.getElementById('saveStatus');
+  var instrumentFilter = document.getElementById('instrumentFilter');
   var today = new Date();
-  dateInput.value = today.toISOString().slice(0,10);
+  var todayStr = today.toISOString().slice(0,10);
+  dateInput.value = todayStr;
 
   function fmt(n){ return '$' + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
-
   function showStatus(msg, isError){
     saveStatus.textContent = msg;
     saveStatus.style.color = isError ? 'var(--loss)' : 'var(--text-muted)';
@@ -169,7 +245,7 @@
 
   async function saveState(){
     try {
-      var payload = JSON.stringify({ startBal: startBal.value, riskPct: riskPct.value, trades: trades });
+      var payload = JSON.stringify({ startBal: startBal.value, riskPct: riskPct.value, dailyLimit: dailyLimit.value, trades: trades });
       if (window.storage && typeof window.storage.set === 'function') {
         var res = await window.storage.set('journal-data', payload, false);
         if (!res) { showStatus('Save failed', true); return; }
@@ -177,9 +253,7 @@
         localStorage.setItem('journal-data', payload);
       }
       showStatus('Saved');
-    } catch (e) {
-      showStatus('Save failed', true);
-    }
+    } catch (e) { showStatus('Save failed', true); }
   }
 
   async function loadState(){
@@ -195,13 +269,11 @@
         var data = JSON.parse(raw);
         startBal.value = data.startBal || 50;
         riskPct.value = data.riskPct || 30;
+        dailyLimit.value = data.dailyLimit || 50;
         trades = data.trades || [];
       }
-    } catch (e) {
-      trades = [];
-    }
-    renderRiskSnapshot();
-    recompute();
+    } catch (e) { trades = []; }
+    renderAll();
   }
 
   function currentBalance(){
@@ -217,6 +289,7 @@
   function renderRiskSnapshot(){
     var r = Number(riskPct.value)/100;
     riskOut.textContent = riskPct.value + '%';
+    dailyLimitOut.textContent = dailyLimit.value + '%';
     riskGrid.innerHTML = '';
     var base = currentBalance();
     document.getElementById('riskDollar').textContent = fmt(base * r) + ' at risk';
@@ -241,6 +314,39 @@
     document.getElementById('rrLoss').textContent = '-' + fmt(riskAmt);
   }
 
+  function drawEquityCurve(balances){
+    var canvas = document.getElementById('equityChart');
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width, h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+    if (balances.length < 2) {
+      ctx.fillStyle = '#9c988e';
+      ctx.font = '13px sans-serif';
+      ctx.fillText('Log at least two trades to see the curve.', 12, h/2);
+      return;
+    }
+    var min = Math.min.apply(null, balances);
+    var max = Math.max.apply(null, balances);
+    var range = (max - min) || 1;
+    var pad = 20;
+    var stepX = (w - pad*2) / (balances.length - 1);
+    ctx.beginPath();
+    ctx.strokeStyle = '#185fa5';
+    ctx.lineWidth = 2;
+    balances.forEach(function(b, i){
+      var x = pad + i * stepX;
+      var y = h - pad - ((b - min) / range) * (h - pad*2);
+      if (i === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    ctx.fillStyle = '#6b6860';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(fmt(min), pad, h - 4);
+    ctx.textAlign = 'right';
+    ctx.fillText(fmt(max), w - pad, 14);
+    ctx.textAlign = 'left';
+  }
+
   function recompute(){
     var bal = Number(startBal.value) || 0;
     var peak = bal;
@@ -248,29 +354,57 @@
     var wins = 0;
     var curStreak = 0;
     var maxStreak = 0;
+    var balances = [bal];
+    var tagStats = {};
+    var instruments = {};
+    var dayAnchor = {};
+    var todayPnl = 0;
+    var todayAnchor = null;
+
+    var filterVal = instrumentFilter.value;
     var body = document.getElementById('ledgerBody');
     body.innerHTML = '';
     rows = [];
+
     trades.forEach(function(t, idx){
       var r = Number(riskPct.value)/100;
+      var inst = t.instrument || 'Gold';
+      instruments[inst] = true;
+      if (!(t.date in dayAnchor)) dayAnchor[t.date] = bal;
+      if (t.date === todayStr && todayAnchor === null) todayAnchor = bal;
+
       var pnl;
       if (t.outcome === 'Win'){ pnl = bal * r * t.rr; wins++; curStreak = 0; }
       else { pnl = -bal * r; curStreak++; maxStreak = Math.max(maxStreak, curStreak); }
       bal += pnl;
+      balances.push(bal);
       peak = Math.max(peak, bal);
       var dd = peak > 0 ? (peak - bal) / peak * 100 : 0;
       maxDD = Math.max(maxDD, dd);
-      rows.push({date:t.date, dir:t.dir, outcome:t.outcome, rr:t.rr, pnl:pnl, balance:bal, notes:t.notes});
+
+      if (t.date === todayStr) todayPnl += pnl;
+
+      var tag = t.tag || 'Untagged';
+      if (!tagStats[tag]) tagStats[tag] = {wins:0, total:0};
+      tagStats[tag].total++;
+      if (t.outcome === 'Win') tagStats[tag].wins++;
+
+      rows.push({date:t.date, instrument:inst, dir:t.dir, outcome:t.outcome, rr:t.rr, tag:t.tag||'', pnl:pnl, balance:bal, notes:t.notes, psych:t.psych||''});
+
+      if (filterVal !== 'all' && inst !== filterVal) return;
 
       var tr = document.createElement('tr');
       var pnlClass = pnl >= 0 ? 'win-text' : 'loss-text';
       tr.innerHTML =
         '<td>' + t.date + '</td>' +
+        '<td>' + inst + '</td>' +
         '<td>' + t.dir + '</td>' +
         '<td>' + t.outcome + '</td>' +
+        '<td>' + (t.tag ? '<span class="tag-pill">' + t.tag + '</span>' : '') + '</td>' +
         '<td class="num ' + pnlClass + '">' + (pnl>=0?'+':'') + fmt(pnl) + '</td>' +
         '<td class="num" style="font-weight:600;">' + fmt(bal) + '</td>' +
         '<td>' + (t.notes || '') + '</td>' +
+        '<td>' + (t.psych || '') + '</td>' +
         '<td><button class="del" data-idx="' + idx + '">Remove</button></td>';
       body.appendChild(tr);
     });
@@ -279,60 +413,151 @@
     document.getElementById('mWinRate').textContent = trades.length ? Math.round(wins/trades.length*100) + '%' : '\u2014';
     document.getElementById('mDrawdown').textContent = trades.length ? maxDD.toFixed(1) + '%' : '\u2014';
     document.getElementById('mStreak').textContent = maxStreak;
-    document.getElementById('emptyState').style.display = trades.length ? 'none' : 'block';
+    document.getElementById('emptyState').style.display = rows.length ? 'none' : 'block';
+
+    var banner = document.getElementById('limitBanner');
+    if (todayAnchor !== null && todayAnchor > 0) {
+      var lossFrac = -todayPnl / todayAnchor;
+      var limit = Number(dailyLimit.value)/100;
+      banner.style.display = lossFrac >= limit ? 'block' : 'none';
+    } else {
+      banner.style.display = 'none';
+    }
+
+    var tagBody = document.getElementById('tagBody');
+    tagBody.innerHTML = '';
+    var tagKeys = Object.keys(tagStats);
+    tagKeys.forEach(function(tag){
+      var s = tagStats[tag];
+      var wr = Math.round(s.wins/s.total*100);
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + tag + '</td><td class="num">' + s.total + '</td><td class="num">' + wr + '%</td>';
+      tagBody.appendChild(tr);
+    });
+    document.getElementById('tagEmpty').style.display = tagKeys.length ? 'none' : 'block';
+
+    var curFilter = instrumentFilter.value;
+    instrumentFilter.innerHTML = '<option value="all">All instruments</option>';
+    Object.keys(instruments).forEach(function(inst){
+      var opt = document.createElement('option');
+      opt.value = inst; opt.textContent = inst;
+      if (inst === curFilter) opt.selected = true;
+      instrumentFilter.appendChild(opt);
+    });
+
+    drawEquityCurve(balances);
 
     Array.prototype.forEach.call(document.querySelectorAll('.del'), function(btn){
       btn.addEventListener('click', function(){
         trades.splice(Number(btn.getAttribute('data-idx')), 1);
-        renderRiskSnapshot();
-        recompute();
+        renderAll();
         saveState();
       });
     });
   }
 
+  function renderAll(){
+    renderRiskSnapshot();
+    recompute();
+  }
+
+  function csvEscape(v){ return '"' + String(v == null ? '' : v).replace(/"/g,'""') + '"'; }
+
   function downloadCsv(){
-    var header = ['Date','Direction','Outcome','Reward:Risk','P&L','Balance','Notes'];
+    var header = ['Date','Instrument','Direction','Outcome','RewardRisk','Tag','Notes','Feeling'];
     var lines = [header.join(',')];
-    rows.forEach(function(r){
-      var vals = [r.date, r.dir, r.outcome, r.rr, r.pnl.toFixed(2), r.balance.toFixed(2), '"' + (r.notes||'').replace(/"/g,'""') + '"'];
-      lines.push(vals.join(','));
+    trades.forEach(function(t){
+      lines.push([t.date, t.instrument||'Gold', t.dir, t.outcome, t.rr, t.tag||'', csvEscape(t.notes), csvEscape(t.psych)].join(','));
     });
     var csv = lines.join('\n');
     var blob = new Blob([csv], {type:'text/csv'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url;
-    a.download = 'trading-journal.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href = url; a.download = 'trading-journal.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
 
-  riskPct.addEventListener('input', function(){ renderRiskSnapshot(); recompute(); saveState(); });
-  startBal.addEventListener('input', function(){ renderRiskSnapshot(); recompute(); saveState(); });
+  function parseCsvLine(line){
+    var out = []; var cur = ''; var inQuotes = false;
+    for (var i=0; i<line.length; i++){
+      var c = line[i];
+      if (inQuotes){
+        if (c === '"' && line[i+1] === '"'){ cur += '"'; i++; }
+        else if (c === '"'){ inQuotes = false; }
+        else { cur += c; }
+      } else {
+        if (c === '"'){ inQuotes = true; }
+        else if (c === ','){ out.push(cur); cur=''; }
+        else { cur += c; }
+      }
+    }
+    out.push(cur);
+    return out;
+  }
+
+  function importCsvText(text){
+    var lines = text.split(/\r?\n/).filter(function(l){ return l.trim().length; });
+    if (!lines.length) return;
+    var body = lines.slice(1);
+    var imported = 0;
+    body.forEach(function(line){
+      var cols = parseCsvLine(line);
+      if (cols.length < 4) return;
+      trades.push({
+        date: cols[0] || todayStr,
+        instrument: cols[1] || 'Gold',
+        dir: cols[2] || 'Long',
+        outcome: cols[3] || 'Win',
+        rr: Number(cols[4]) || 1,
+        tag: cols[5] || '',
+        notes: cols[6] || '',
+        psych: cols[7] || ''
+      });
+      imported++;
+    });
+    renderAll();
+    saveState();
+    showStatus(imported + ' trades imported');
+  }
+
+  riskPct.addEventListener('input', function(){ renderAll(); saveState(); });
+  startBal.addEventListener('input', function(){ renderAll(); saveState(); });
+  dailyLimit.addEventListener('input', function(){ renderAll(); saveState(); });
+  instrumentFilter.addEventListener('change', recompute);
   document.getElementById('tRR').addEventListener('input', updateRRPreview);
   document.getElementById('exportCsv').addEventListener('click', downloadCsv);
+  document.getElementById('importBtn').addEventListener('click', function(){ document.getElementById('importCsv').click(); });
+  document.getElementById('importCsv').addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(evt){ importCsvText(evt.target.result); };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
   document.getElementById('resetAll').addEventListener('click', function(){
     if (confirm('Clear all logged trades? This cannot be undone.')) {
       trades = [];
-      renderRiskSnapshot();
-      recompute();
+      renderAll();
       saveState();
     }
   });
 
   document.getElementById('addTrade').addEventListener('click', function(){
-    var date = document.getElementById('tDate').value || today.toISOString().slice(0,10);
+    var date = document.getElementById('tDate').value || todayStr;
+    var instrument = document.getElementById('tInstrument').value || 'Gold';
     var dir = document.getElementById('tDir').value;
     var outcome = document.getElementById('tOutcome').value;
     var rr = Number(document.getElementById('tRR').value) || 1;
+    var tag = document.getElementById('tTag').value.trim();
     var notes = document.getElementById('tNotes').value;
-    trades.push({date:date, dir:dir, outcome:outcome, rr:rr, notes:notes});
+    var psych = document.getElementById('tPsych').value;
+    trades.push({date:date, instrument:instrument, dir:dir, outcome:outcome, rr:rr, tag:tag, notes:notes, psych:psych});
     document.getElementById('tNotes').value = '';
-    renderRiskSnapshot();
-    recompute();
+    document.getElementById('tPsych').value = '';
+    document.getElementById('tTag').value = '';
+    renderAll();
     saveState();
   });
 
